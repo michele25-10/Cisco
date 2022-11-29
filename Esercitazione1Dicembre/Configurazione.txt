@@ -1,0 +1,729 @@
+ITIS
+
+SW-CentroStella
+
+ena
+conf t
+hostname SW-CentroStella
+vlan 10
+name Segreteria
+exit
+vlan 20
+name Presidenza
+exit
+vlan 30
+name Aule
+exit
+vlan 40
+name Wifi
+exit
+vlan 50
+name MNG
+exit
+vlan 60
+name Bidelleria
+exit
+vlan 70
+name Laboratori
+exit
+end
+exit
+
+ena
+conf t
+vtp version 2
+vtp mode server
+vtp domain itis
+vtp password itis
+end
+write
+exit
+
+ena
+conf t
+int vlan 10
+ip address 192.168.10.254 255.255.255.0
+no shutdown
+exit
+int vlan 20
+ip address 192.168.20.254 255.255.255.0
+no shutdown
+exit
+int vlan 30
+ip address 192.168.30.254 255.255.255.0
+no shutdown
+exit
+int vlan 40
+ip address 192.168.40.254 255.255.255.0
+no shutdown
+exit
+int vlan 50
+ip address 192.168.50.254 255.255.255.0
+no shutdown
+exit
+int vlan 60
+ip address 192.168.60.254 255.255.255.0
+no shutdown
+exit
+int vlan 70
+ip address 192.168.70.254 255.255.255.0
+no shutdown
+end
+write
+exit
+
+ena
+conf t
+ip routing 
+vlan 10
+vlan 20
+vlan 30
+vlan 40
+vlan 50
+vlan 60
+vlan 70
+end
+write
+exit
+
+ena
+conf t
+int fa0/23
+switchport trunk encapsulation dot1Q
+switchport trunk allowed vlan none
+switchport trunk allowed vlan add 10
+switchport trunk allowed vlan add 20
+no shutdown
+exit
+int fa0/22
+switchport trunk encapsulation dot1Q
+switchport trunk allowed vlan none
+switchport trunk allowed vlan add 30
+no shutdown
+exit
+int fa0/21
+switchport trunk encapsulation dot1Q
+switchport trunk allowed vlan none
+switchport trunk allowed vlan add 70
+no shutdown
+end
+write
+exit
+
+ena
+conf t
+ip dhcp pool aule
+network 192.168.30.0 255.255.255.0
+default-router 192.168.30.254
+exit
+ip dhcp pool MNG
+network 192.168.50.0 255.255.255.0
+default-router 192.168.50.254
+dhcp excluded 192.168.50.1 192.168.50.252
+end
+write
+exit
+
+
+-----------------
+
+SW-Segreteria
+
+ena
+conf t
+hostname SW-Segreteria
+vtp version 2
+vtp mode client
+vtp domain itis
+vtp password itis
+end 
+exit
+
+ena
+conf t
+int fa0/23
+switchport mode trunk
+end
+write
+exit
+
+ena
+conf t
+int fa0/23
+switchport trunk allowed vlan none
+switchport trunk allowed vlan add 10
+switchport trunk allowed vlan add 20
+no shutdown
+end
+write
+exit
+
+-----------------
+SW-SettoreA
+ena
+conf t
+hostname SW-SettoreA
+vtp version 2
+vtp mode client
+vtp domain itis
+vtp password itis
+end 
+exit
+
+ena
+conf t
+int fa0/22
+switchport mode trunk
+end
+write
+exit
+
+ena
+conf t
+int fa0/22
+switchport trunk allowed vlan none
+switchport trunk allowed vlan add 30
+no shutdown
+end
+write
+exit
+-----------------
+
+SW-SettoreB
+
+ena
+conf t
+hostname SW-SettoreB
+vtp version 2
+vtp mode client
+vtp domain itis
+vtp password itis
+end 
+exit
+
+ena
+conf t
+int fa0/21
+switchport mode trunk
+end
+write
+exit
+
+ena
+conf t
+int fa0/21
+switchport trunk allowed vlan none
+switchport trunk allowed vlan add 70
+no shutdown
+end
+write
+exit
+
+----------------------
+
+SW di tutto l'itis
+
+ena
+conf t
+int range fa0/1-2
+switchport access vlan 10
+exit
+int fa0/3
+switchport access vlan 20
+exit
+int range fa0/4-10
+switchport access vlan 30
+exit
+int range fa0/11-13
+switchport access vlan 60
+exit
+int range fa0/14-18
+switchport access vlan 70
+exit
+int fa0/24
+switchport access vlan 50
+end
+write
+exit
+
+---------------------------------------------------------------------------------------------------------------
+ITA
+
+ITA-SVI
+
+ena
+conf t
+hostname ITA-SVI
+vlan 10
+name Segreteria
+exit
+vlan 20
+name Presidenza
+exit
+vlan 30
+name Aule
+exit
+vlan 50
+name MNG
+end
+exit
+
+ena
+conf t
+int fa0/1 
+switchport access vlan 10
+no shutdown
+exit
+int range fa0/2-4
+switchport access vlan 20
+no shutdown
+exit
+int range fa0/5-20
+switchport access vlan 30
+no shutdown
+exit
+int fa0/23 
+switchport access vlan 50
+no shutdown
+end
+exit
+
+ena
+conf t
+int vlan 10
+ip address 172.16.10.254 255.255.255.0
+no shutdown
+exit
+int vlan 20
+ip address 172.16.20.254 255.255.255.0
+no shutdown
+exit
+int vlan 30
+ip address 172.16.30.254 255.255.255.0
+no shutdown
+exit
+int vlan 50
+ip address 172.16.50.254 255.255.255.0
+no shutdown
+end
+write
+exit
+
+ena
+conf t
+ip routing 
+vlan 10
+vlan 20
+vlan 30
+vlan 50
+end
+write
+exit
+
+ena
+conf t
+ip dhcp pool aule
+network 172.16.30.0 255.255.255.0
+default-router 172.16.30.254
+end
+write
+exit
+
+------------------------------------------------------------------------------------------------------------------
+Spaggiari
+SW-CentroStellaSpaggiari
+
+ena
+conf t
+hostname SW-CentroStellaSpaggiari
+vlan 10
+name Uffici
+exit
+vlan 20
+name MNG
+exit
+vlan 30
+name Server
+end
+exit
+
+ena
+conf t
+vtp version 2
+vtp mode server
+vtp domain spaggiari
+vtp password spaggiari
+end
+write
+exit
+
+ena
+conf t
+int vlan 10
+ip address 11.0.10.254 255.255.255.0
+no shutdown
+exit
+int vlan 20
+ip address 11.0.20.254 255.255.255.0
+no shutdown
+exit
+int vlan 30
+ip address 11.0.30.254 255.255.255.0
+no shutdown
+end
+write
+exit
+
+ena
+conf t
+ip routing 
+vlan 10
+vlan 20
+vlan 30
+end
+write
+exit
+
+ena
+conf t
+int range fa0/1-3
+switchport access vlan 30
+no shutdown
+exit
+int fa0/23
+switchport trunk encapsulation dot1Q
+switchport trunk allowed vlan none
+switchport trunk allowed vlan add 10
+switchport trunk allowed vlan add 20
+no shutdown
+end
+write
+exit
+
+ena
+conf t
+ip dhcp pool MNG
+network 11.0.20.0 255.255.255.0
+default-router 11.0.20.254
+dns-server 11.0.30.1
+exit
+ip dhcp excluded-address 11.0.20.1 11.0.20.252
+service dhcp
+end
+write
+exit
+
+
+--------------------------
+SW Uffici
+
+ena
+conf t
+hostname SW-Uffici
+vtp version 2
+vtp mode client
+vtp domain spaggiari
+vtp password spaggiari
+end 
+exit
+
+ena
+conf t
+int fa0/23
+switchport mode trunk
+end
+write
+exit
+
+ena
+conf t
+int fa0/24
+switchport access vlan 20
+no shutdown
+exit 
+int range fa0/1-20
+switchport access vlan 10
+no shutdown
+exit 
+int fa0/23
+switchport trunk allowed vlan none
+switchport trunk allowed vlan add 10
+switchport trunk allowed vlan add 20
+no shutdown
+end
+write
+exit
+
+-----------------------------------------------------------------------------------
+Configurazione della parte comunicativa tra router
+
+SW-CentroStella
+ena
+conf t
+int fa0/24 
+no switchport
+ip address 10.0.0.1 255.255.255.252
+no shutdown
+end
+write
+exit
+
+ena
+conf t
+ip route 172.16.0.0 255.255.0.0 10.0.0.2
+ip route 11.0.0.0 255.255.0.0 10.0.0.2
+end
+write
+exit
+
+----------
+RT-ITIS
+ena 
+conf t
+hostname ITIS
+int fa0/0
+ip address 10.0.0.2 255.255.255.252
+no shutdown
+exit
+int se2/0
+ip address 10.0.0.6 255.255.255.252
+no shutdown
+exit
+int se3/0
+ip address 10.0.0.22 255.255.255.252
+no shutdown
+exit
+end
+write
+exit
+
+ena
+conf t
+ip route 172.16.0.0 255.255.0.0 10.0.0.5
+ip route 11.0.0.0 255.255.0.0 10.0.0.21
+end
+write
+exit
+
+ena
+conf t
+ip route 192.168.10.0 255.255.255.0 10.0.0.1
+ip route 192.168.20.0 255.255.255.0 10.0.0.1
+ip route 192.168.30.0 255.255.255.0 10.0.0.1
+ip route 192.168.40.0 255.255.255.0 10.0.0.1
+ip route 192.168.50.0 255.255.255.0 10.0.0.1
+ip route 192.168.60.0 255.255.255.0 10.0.0.1
+ip route 192.168.70.0 255.255.255.0 10.0.0.1
+end
+write
+exit
+
+---------
+RT-ITA
+ena 
+conf t
+hostname ITA
+int fa0/0
+ip address 10.0.0.9 255.255.255.252
+no shutdown
+exit
+int se2/0
+ip address 10.0.0.5 255.255.255.252
+no shutdown
+exit
+int se3/0
+ip address 10.0.0.13 255.255.255.252
+no shutdown
+exit
+end
+write
+exit
+
+ena
+conf t
+ip route 172.16.10.0 255.255.255.0 10.0.0.10
+ip route 172.16.20.0 255.255.255.0 10.0.0.10
+ip route 172.16.30.0 255.255.255.0 10.0.0.10
+end
+write
+exit
+
+ena
+conf t
+ip route 11.0.0.0 255.255.0.0 10.0.0.14
+ip route 192.168.0.0 255.255.0.0 10.0.0.6
+end
+write
+exit
+
+---------
+ITA-SVI
+ena
+conf t
+int fa0/24 
+no switchport
+ip address 10.0.0.10 255.255.255.252
+no shutdown
+end
+write
+exit
+
+ena
+conf t
+ip route 192.168.0.0 255.255.0.0 10.0.0.9 
+ip route 11.0.0.0 255.255.0.0 10.0.0.9 
+end
+write
+exit
+
+----------
+Spaggiari RT
+ena
+conf t
+hostname Spaggiari
+int fa0/0
+ip address 10.0.0.18 255.255.255.252
+no shutdown
+exit
+int se2/0
+ip address 10.0.0.21 255.255.255.252
+no shutdown
+exit
+int se3/0
+ip address 10.0.0.14 255.255.255.252
+no shutdown
+exit
+end
+write
+exit
+
+ena
+conf t
+ip route 11.0.10.0 255.255.255.0 10.0.0.17
+ip route 11.0.30.0 255.255.255.0 10.0.0.17
+end
+write
+exit
+
+ena
+conf t
+ip route 192.168.0.0 255.255.0.0 10.0.0.22
+ip route 172.16.0.0 255.255.0.0 10.0.0.13
+end
+write
+exit
+
+------
+SVI-Spiaggiari
+ena
+conf t
+int fa0/24
+no switchport
+ip address 10.0.0.17 255.255.255.252
+no shutdown
+end
+write
+exit
+
+ena
+conf t
+ip route 192.168.0.0 255.255.0.0 10.0.0.18
+ip route 172.16.0.0 255.255.0.0 10.0.0.18
+end
+write
+exit
+
+
+-----------------------------------------------------------------------------
+PROTEZIONE ACCESSI
+SW-Uffici
+
+ena
+conf t
+line console 0
+password admin
+service password-encryption
+login
+end
+conf t
+banner motd "SEI ENTRATO NELLA MODALITA' CONSOLE"
+write
+exit
+
+ena
+conf t
+int vlan 20 
+ip address 11.0.20.1 255.255.255.0
+end
+write
+exit
+
+ena
+conf t
+enable secret admin
+service password-encryption
+end
+write
+exit
+
+ena
+conf t
+enable password admin
+line vty 0 4 
+login local
+transport input ssh
+username spiaggiari password admin
+ip domain-name spiaggiari
+crypto key generate rsa 
+2048
+end
+write
+exit
+
+------------------------
+
+SVI-Spiaggiari
+ena
+conf t
+line console 0
+password admin
+service password-encryption
+login
+end
+conf t
+banner motd "SEI ENTRATO NELLA MODALITA' CONSOLE"
+write
+exit
+
+ena
+conf t
+int vlan 20 
+ip address 11.0.20.1 255.255.255.0
+end
+write
+exit
+
+ena
+conf t
+enable password admin
+line vty 0 4 
+login local
+transport input ssh
+username spiaggiari password admin
+ip domain-name spiaggiari
+crypto key generate rsa 
+2048
+end
+conf t
+banner motd "SEI ENTRATO NELLA MODALITA' SSH"
+end
+write
+exit
+
+ena
+conf t
+enable secret admin
+service password-encryption
+end
+write
+exit
