@@ -1,0 +1,57 @@
+mar feb 7 14:47:53 2023   Router0   Router>enable
+mar feb 7 14:47:53 2023   Router0   Router#configure terminal
+mar feb 7 14:47:53 2023   Router0   Router(config)#interface FastEthernet0/0
+mar feb 7 14:47:55 2023   Router0   Router(config-if)#no shutdown
+mar feb 7 14:48:07 2023   Router0   Router(config-if)#ip address 192.168.1.254 255.255.255.0
+mar feb 7 14:48:11 2023   Router0   Router(config-if)#ip address 192.168.1.254 255.255.255.0
+mar feb 7 14:48:11 2023   Router0   Router(config-if)#exit
+mar feb 7 14:48:11 2023   Router0   Router(config)#interface Serial2/0
+mar feb 7 14:48:16 2023   Router0   Router(config-if)#ip address 10.0.0.1 255.0.0.0
+mar feb 7 14:48:22 2023   Router0   Router(config-if)#ip address 10.0.0.1 255.255.255.252
+mar feb 7 14:48:22 2023   Router0   Router(config-if)#no shutdown
+mar feb 7 14:48:33 2023   Router1   Router>enable
+mar feb 7 14:48:33 2023   Router1   Router#configure terminal
+mar feb 7 14:48:33 2023   Router1   Router(config)#interface Serial2/0
+mar feb 7 14:48:35 2023   Router1   Router(config-if)#no shutdown
+mar feb 7 14:48:42 2023   Router1   Router(config-if)#ip address 10.0.0.2 255.0.0.0
+mar feb 7 14:48:49 2023   Router1   Router(config-if)#ip address 10.0.0.2 255.255.255.252
+mar feb 7 14:49:36 2023   Router1   Router(config-if)#exit
+mar feb 7 14:49:36 2023   Router1   Router(config)#interface FastEthernet0/0
+mar feb 7 14:49:38 2023   Router1   Router(config-if)#speed 100
+mar feb 7 14:49:38 2023   Router1   Router(config-if)#no shutdown
+mar feb 7 14:49:39 2023   Router1   Router(config-if)#speed auto
+mar feb 7 14:49:47 2023   Router1   Router(config-if)#ip address 192.168.0.254 255.255.255.0
+mar feb 7 14:49:49 2023   Router1   Router(config-if)#ip address 192.168.0.254 255.255.255.0
+mar feb 7 15:11:45 2023   Router0   Router>enable
+mar feb 7 15:11:45 2023   Router0   Router#configure terminal
+mar feb 7 15:12:03 2023   Router0   Router(config)#ip route 192.168.0.0 255.255.255.0 10.0.0.2
+mar feb 7 15:12:13 2023   Router1   Router>enable
+mar feb 7 15:12:13 2023   Router1   Router#configure terminal
+mar feb 7 15:12:30 2023   Router1   Router(config)#ip route 192.168.1.0 255.255.255.0 10.0.0.1
+mar feb 7 20:12:15 2023   Router0   Router>ena
+mar feb 7 20:12:16 2023   Router0   Router#conf t
+mar feb 7 20:12:24 2023   Router0   Router(config)#int se2/0
+mar feb 7 20:12:36 2023   Router0   Router(config-if)#ip access-group 1 in
+mar feb 7 20:13:25 2023   Router0   Router(config-if)#access-list 1 permit host 192.168.0.1
+mar feb 7 20:13:42 2023   Router0   Router(config)#access-list 1 deny 192.168.0.0 0.0.0.254
+mar feb 7 20:13:44 2023   Router0   Router(config)#do write
+mar feb 7 20:18:09 2023   Router0   Router>ena c
+mar feb 7 20:18:11 2023   Router0   Router>ena 
+mar feb 7 20:18:13 2023   Router0   Router#conf t
+mar feb 7 20:18:40 2023   Router0   Router(config)#int fa0/0
+mar feb 7 20:18:52 2023   Router0   Router(config-if)#ip access-group 101 in
+mar feb 7 20:20:16 2023   Router0   Router(config-if)#access-list 101 permit tcp host 192.168.1.1 host 192.168.0.1 eq 80
+mar feb 7 20:20:45 2023   Router0   Router(config)#access-list 101 permit udp host 192.168.1.1 host 192.168.0.1 eq 53
+mar feb 7 20:23:00 2023   Router0   Router(config)#int se2/0
+mar feb 7 20:23:20 2023   Router0   Router(config-if)#no ip access-group 1 in
+mar feb 7 20:26:28 2023   Router0   Router(config)#do sh access-list
+mar feb 7 20:27:19 2023   Router0   Router(config)#access-list 101 permit icmp 192.168.1.0 0.0.0.255 host 192.168.0.1
+mar feb 7 20:27:25 2023   Router0   Router(config)#do sh access-list
+mar feb 7 20:29:52 2023   Router1   Router>ena
+mar feb 7 20:29:53 2023   Router1   Router#conf t
+mar feb 7 20:30:03 2023   Router1   Router(config)#int se2/0
+mar feb 7 20:30:12 2023   Router1   Router(config-if)#ip access-group 2 in
+mar feb 7 20:30:32 2023   Router1   Router(config-if)#access-list 2 permit host 192.168.1.1
+mar feb 7 20:30:35 2023   Router1   Router(config)#do write
+mar feb 7 20:32:05 2023   Router0   Router(config)#do write
+mar feb 7 20:32:10 2023   Router1   Router(config)#do write
