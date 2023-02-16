@@ -1,0 +1,163 @@
+SWITCH MULTILAYER
+
+ena
+conf t
+vlan 10 
+name vlan10
+exit 
+vlan 20
+name MNG
+exit
+vlan 30 
+name vlan30
+exit
+int vlan 10
+ip address 192.168.10.254 255.255.255.0
+no shutdown
+exit
+int vlan 20
+ip address 192.168.20.254 255.255.255.0
+no shutdown
+exit
+int vlan 30
+ip address 192.168.30.254 255.255.255.0
+no shutdown
+exit
+ip routing 
+vlan 10
+vlan 20
+vlan 30
+end
+exit
+
+
+ena
+conf t
+int gig0/1
+switchport trunk encapsulation dot1Q
+switchport trunk allowed vlan none
+switchport trunk allowed vlan add 10
+switchport trunk allowed vlan add 20
+switchport trunk allowed vlan add 30
+exit
+int fa0/1
+switchport access vlan 20
+no shutdown
+exit
+int fa0/2
+switchport access vlan 20
+no shutdown
+exit
+end 
+exit
+
+
+ena
+conf t
+ip dhcp pool interno
+network 192.168.20.0 255.255.255.0
+default-router 192.168.20.254
+dns-server 192.168.20.1
+exit
+ip dhcp excluded-address 192.168.20.1 192.168.20.50
+service dhcp 
+end
+exit
+
+ena
+conf t
+ip domain name admin
+crypto key generate rsa
+2048
+enable password admin 
+username admin password admin
+ip ssh version 2
+line vty 0 15
+transport input ssh
+login local 
+end
+exit
+
+
+
+---------------------------------------
+SWITCH
+
+ena
+conf t 
+hostname SW_A
+vlan 10 
+name vlan10
+exit 
+vlan 20
+name MNG
+exit
+vlan 30 
+name vlan30
+end
+exit
+
+
+ena
+conf t
+int fa0/1
+switchport access vlan 10
+no shutdown
+exit
+int fa0/2
+switchport access vlan 20
+no shutdown
+exit 
+int fa0/3
+switchport access vlan 30 
+no shutdown 
+end
+exit
+
+
+ena 
+conf t
+int gig0/1
+switchport mode trunk
+switchport trunk allowed vlan none
+switchport trunk allowed vlan add 10
+switchport trunk allowed vlan add 20
+switchport trunk allowed vlan add 30
+no shutdown 
+exit
+end
+exit
+
+
+ena
+conf t
+int vlan 20
+ip address 192.168.20.20 255.255.255.0
+no shutdown
+end
+write
+exit
+
+ena
+conf t
+ip domain name admin
+crypto key generate rsa
+2048
+enable password admin 
+username admin password admin
+ip ssh version 2
+line vty 0 15
+transport input ssh
+login local 
+end
+exit
+
+---------------------------------------------------------
+ACL EXTENDEND
+
+SW MULTILAYER
+ena
+conf t
+int vlan 20
+ip access-group 101 out
+access-list 101 permit tcp 192.168.20.0 0.0.0.255 any eq 22
